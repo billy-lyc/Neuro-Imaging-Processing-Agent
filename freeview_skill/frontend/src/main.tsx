@@ -1,0 +1,42 @@
+// import { StrictMode } from 'react'
+import React from 'react';
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom'
+import './index.css'
+import FreeBrowse from './components/freebrowse.tsx';
+import QaViewer from './components/qa-viewer.tsx';
+
+// Get base path from Vite's base config (import.meta.env.BASE_URL)
+// This is automatically set by Vite based on the `base` config option
+const basename = import.meta.env.BASE_URL;
+
+// Use HashRouter for serverless mode (file:// protocol compatibility)
+const isServerless = import.meta.env.VITE_SERVERLESS === 'true';
+const Router = isServerless ? HashRouter : BrowserRouter;
+
+createRoot(document.getElementById('root')!).render(
+  // disable strict mode for for better niivue development experience
+  // <StrictMode>
+  <Router basename={isServerless ? undefined : basename}>
+    <Routes>
+      <Route path="/" element={
+         <div className="app-container">
+           <div className="main-content">
+             <FreeBrowse />
+           </div>
+         </div>
+      } />
+      {!isServerless && (
+        <Route path="/qa" element={
+          <div className="app-container">
+            <div className="main-content">
+              <QaViewer />
+            </div>
+          </div>
+        } />
+      )}
+    </Routes>
+  </Router>
+  // </StrictMode>,
+
+)
